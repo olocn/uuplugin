@@ -6,7 +6,10 @@ if [ ! -c /dev/net/tun ]; then
     mknod /dev/net/tun c 10 200
     chmod 666 /dev/net/tun
 fi
-
+# 開啟 IPv4 轉發 (核心指令)
+echo 1 > /proc/sys/net/ipv4/ip_forward
+# 為了保險，也可以開啟橋接網絡的流量處理（針對 QNAP 的虛擬交換機環境）
+echo 1 > /proc/sys/net/ipv4/conf/all/forwarding 2>/dev/null
 # 2. 寫入網絡配置 (偽裝)
 echo "config interface 'lan'
     option ifname 'eth0'
