@@ -11,6 +11,9 @@ ENV UU_LAN_DNS="119.29.29.29"
 # libc6-compat 是運行網易二進制檔(glibc)的關鍵
 RUN apk add --no-cache \
     wget \
+    curl \
+    jq \
+    tar \
     ca-certificates \
     iptables \
     iproute2 \
