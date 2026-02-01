@@ -1,6 +1,6 @@
 FROM openwrtorg/rootfs:x86-64-19.07.6
 
-LABEL maintainer="DianQK <dianqk@icloud.com>"
+LABEL maintainer="UU"
 
 ENV UU_LAN_IPADDR=
 ENV UU_LAN_GATEWAY=
