@@ -1,4 +1,4 @@
-FROM openwrtorg/rootfs:x86-64-19.07.6
+FROM openwrtorg/rootfs:x86-64
 
 LABEL maintainer="UU"
 
