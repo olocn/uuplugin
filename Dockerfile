@@ -1,27 +1,33 @@
-#  FROM openwrtorg/rootfs:x86-64
-FROM openwrt/rootfs:x86-64
-LABEL maintainer="UU"
+FROM alpine:latest
+LABEL maintainer="UU-Custom"
 
-ENV UU_LAN_IPADDR=
-ENV UU_LAN_GATEWAY=
+# 設定預設環境變數
+ENV UU_LAN_IPADDR="192.168.8.200"
+ENV UU_LAN_GATEWAY="192.168.8.1"
 ENV UU_LAN_NETMASK="255.255.255.0"
 ENV UU_LAN_DNS="119.29.29.29"
 
-USER root
+# 安裝必要依賴 (Alpine 環境)
+# libc6-compat 是運行網易二進制檔(glibc)的關鍵
+RUN apk add --no-cache \
+    wget \
+    ca-certificates \
+    iptables \
+    iproute2 \
+    libc6-compat \
+    bash
 
-RUN mkdir /var/lock
-RUN opkg update
-RUN opkg install libustream-mbedtls ca-certificates kmod-tun
+# 偽裝 OpenWrt 環境目錄與標誌檔案
+# 網易腳本會檢查 /etc/openwrt_release
+RUN mkdir -p /etc/config /etc/init.d /var/lock /var/run && \
+    echo "DISTRIB_ID='OpenWrt'" > /etc/openwrt_release
 
-ADD uu_prepare /etc/init.d/uu_prepare
-RUN /etc/init.d/uu_prepare enable
-# 关闭 ipv6 dhcp
-RUN /etc/init.d/odhcpd disable
-# 关闭防火墙规则
-RUN /etc/init.d/firewall disable
-# 禁止访问 Web
-RUN /etc/init.d/uhttpd disable
-# 禁止 SSH 登录
-RUN /etc/init.d/dropbear disable
+# 複製並設定啟動腳本
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-CMD ["/sbin/init"]
+# 暴露插件通訊端口
+EXPOSE 43474
+
+# 啟動容器時直接執行腳本，不再使用 /sbin/init
+ENTRYPOINT ["/entrypoint.sh"]
