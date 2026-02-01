@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.12
 LABEL maintainer="UU-Custom"
 
 # 設定預設環境變數
