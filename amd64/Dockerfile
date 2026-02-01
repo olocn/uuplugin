@@ -1,5 +1,4 @@
-FROM openwrtorg/rootfs:x86-64-19.07.6
-
+FROM openwrt/rootfs:x86-64
 LABEL maintainer="UU"
 
 ENV UU_LAN_IPADDR=
